@@ -39,11 +39,29 @@ app.post("/api/animals", cors(), async (req, res) => {
   const newAnimal = {
     nickname: req.body.nickname,
     animal_record_timestamp: req.body.animal_record_timestamp,
+    species_name: req.body.species_name,
+    date_of_sighting: req.body.date_of_sighting,
+    time_of_sighting: req.body.time_of_sighting,
+    location_of_sighting: req.body.location_of_sighting,
+    sighter_email: req.body.sighter_email,
+    health: req.body.health,
   };
-  console.log([newAnimal.nickname, newAnimal.animal_record_timestamp]);
+  console.log([
+    newAnimal.nickname,
+    newAnimal.animal_record_timestamp,
+    newAnimal.species_name,
+    newAnimal.date_of_sighting,
+  ]);
   const result = await db.query(
     "INSERT INTO animal(nickname, animal_record_timestamp) VALUES($1, $2) RETURNING *",
-    [newAnimal.nickname, newAnimal.animal_record_timestamp]
+    "INSERT INTO sightings(date_of_sighting, time_of_sighting, location_of_sighting, sighter_email, health) VALUES($1, $2, $3, $4, $5) RETURNING *",
+    [(newAnimal.nickname, newAnimal.animal_record_timestamp)][
+      (newAnimal.date_of_sighting,
+      newAnimal.time_of_sighting,
+      newAnimal.location_of_sighting,
+      newAnimal.sighter_email,
+      newAnimal.health)
+    ]
   );
   console.log(result.rows[0]);
   res.json(result.rows[0]);

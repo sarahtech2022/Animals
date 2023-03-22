@@ -6,6 +6,11 @@ const Form = (props) => {
       id_animal: null,
       nickname: "",
       animal_record_timestamp: "",
+      date_of_sighting: "",
+      time_of_sighting: "",
+      location_of_sighting: "",
+      sighter_email: "",
+      health: "",
     },
   } = props;
 
@@ -21,6 +26,31 @@ const Form = (props) => {
   const handleTimestampChange = (event) => {
     const animal_record_timestamp = event.target.value;
     setAnimal((animal) => ({ ...animal, animal_record_timestamp }));
+  };
+
+  const handleDateOfSightingChange = (event) => {
+    const date_of_sighting = event.target.value;
+    setAnimal((animal) => ({ ...animal, date_of_sighting }));
+  };
+
+  const handleTimeOfSightingChange = (event) => {
+    const time_of_sighting = event.target.value;
+    setAnimal((animal) => ({ ...animal, time_of_sighting }));
+  };
+
+  const handleLocationOfSightingChange = (event) => {
+    const location_of_sighting = event.target.value;
+    setAnimal((animal) => ({ ...animal, location_of_sighting }));
+  };
+
+  const handleSighterEmailChange = (event) => {
+    const sighter_email = event.target.value;
+    setAnimal((animal) => ({ ...animal, sighter_email }));
+  };
+
+  const handleHealthChange = (event) => {
+    const health = event.target.value;
+    setAnimal((animal) => ({ ...animal, health }));
   };
 
   //A function to handle the post request
@@ -78,6 +108,7 @@ const Form = (props) => {
           value={animal.nickname}
           onChange={handleNicknameChange}
         />
+
         <label>Animal Record Timestamp</label>
         <input
           type="date"
@@ -86,6 +117,46 @@ const Form = (props) => {
           required
           value={animal.animal_record_timestamp}
           onChange={handleTimestampChange}
+        />
+
+        <label>Date of Sighting </label>
+        <input
+          type="date"
+          id="add-date-of-sighting"
+          placeholder="Date of Sighting"
+          required
+          value={animal.date_of_sighting}
+          onChange={handleDateOfSightingChange}
+        />
+
+        <label>Time of Sighting </label>
+        <input
+          type="date"
+          id="add-time-of-sighting"
+          placeholder="Time of Sighting"
+          required
+          value={animal.time_of_sighting}
+          onChange={handleTimeOfSightingChange}
+        />
+
+        <label>Location of Sighting </label>
+        <input
+          type="text"
+          id="add-location-of-sighting"
+          placeholder="Location of Sighting"
+          required
+          value={animal.location_of_sighting}
+          onChange={handleLocationOfSightingChange}
+        />
+
+        <label>Health </label>
+        <input
+          type="text"
+          id="add-health"
+          placeholder="Health"
+          required
+          value={animal.health}
+          onChange={handleHealthChange}
         />
       </fieldset>
       <button type="submit">{!animal.id_animal ? "ADD" : "SAVE"}</button>
