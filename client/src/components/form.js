@@ -25,6 +25,7 @@ const Form = (props) => {
 
   //A function to handle the post request
   const postAnimal = (newAnimal) => {
+    console.log("I am in my postrequest");
     return fetch("http://localhost:8085/api/animals", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
