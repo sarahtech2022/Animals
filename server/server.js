@@ -33,6 +33,17 @@ app.get("/api/animals", cors(), async (req, res) => {
   }
 });
 
+//*******Creating our New get request to get the data from the sighting table!
+
+app.get("/api/sightings", cors(), async (req, res) => {
+  try {
+    const { rows: sightings } = await db.query("SELECT * FROM sightings");
+    res.send(sightings);
+  } catch (e) {
+    return res.status(400).json({ e });
+  }
+});
+
 // create the POST request
 app.post("/api/animals", cors(), async (req, res) => {
   console.log("working");
