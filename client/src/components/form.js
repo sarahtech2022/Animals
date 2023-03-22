@@ -1,7 +1,13 @@
 import { useState } from "react";
 
 const Form = (props) => {
-  const { initialAnimal = { id: null, firstname: "", lastname: "" } } = props;
+  const {
+    initialAnimal = {
+      id_animal: null,
+      nickname: "",
+      animal_record_timestamp: "",
+    },
+  } = props;
 
   // This is the oroginal State with not initial student
   const [animal, setAnimal] = useState(initialAnimal);
