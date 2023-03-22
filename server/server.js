@@ -5,7 +5,7 @@ const db = require("./db/db-connection.js");
 
 const app = express();
 
-const PORT = 8080;
+const PORT = 8085;
 app.use(cors());
 app.use(express.json());
 
@@ -15,7 +15,7 @@ app.get("/", (req, res) => {
 });
 
 // create the get request
-app.get("/api/students", cors(), async (req, res) => {
+app.get("/api/animals", cors(), async (req, res) => {
   // const STUDENTS = [
 
   //     { id: 1, firstName: 'Lisa', lastName: 'Lee' },
@@ -26,25 +26,24 @@ app.get("/api/students", cors(), async (req, res) => {
   // ];
   // res.json(STUDENTS);
   try {
-    const { rows: individual } = await db.query(
-      "SELECT nickname FROM individual"
-    );
-    res.send(individual);
+    const { rows: animal } = await db.query("SELECT * FROM animal");
+    res.send(animal);
   } catch (e) {
     return res.status(400).json({ e });
   }
 });
 
 // create the POST request
-app.post("/api/students", cors(), async (req, res) => {
-  const newUser = {
-    firstname: req.body.firstname,
-    lastname: req.body.lastname,
+app.post("/api/animals", cors(), async (req, res) => {
+  console.log("working");
+  const newAnimal = {
+    nickname: req.body.nickname,
+    animal_record_timestamp: req.body.animal_record_timestamp,
   };
-  console.log([newUser.firstname, newUser.lastname]);
+  console.log([newAnimal.nickname, newAnimal.animal_record_timestamp]);
   const result = await db.query(
-    "INSERT INTO students(firstname, lastname) VALUES($1, $2) RETURNING *",
-    [newUser.firstname, newUser.lastname]
+    "INSERT INTO animal(nickname, animal_record_timestamp) VALUES($1, $2) RETURNING *",
+    [newAnimal.nickname, newAnimal.animal_record_timestamp]
   );
   console.log(result.rows[0]);
   res.json(result.rows[0]);

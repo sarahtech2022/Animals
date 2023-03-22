@@ -1,91 +1,87 @@
 import { useState } from "react";
 
 const Form = (props) => {
+  const { initialAnimal = { id: null, firstname: "", lastname: "" } } = props;
 
-  const {initialStudent = {id: null, 
-                          firstname: "", 
-                        lastname: ""}} = props;
-
-
-  // This is the oroginal State with not initial student 
-  const [student, setStudent] = useState(initialStudent);
+  // This is the oroginal State with not initial student
+  const [animal, setAnimal] = useState(initialAnimal);
 
   //create functions that handle the event of the user typing into the form
-  const handleNameChange = (event) => {
-    const firstname = event.target.value;
-    setStudent((student) => ({ ...student, firstname }));
+  const handleNicknameChange = (event) => {
+    const nickname = event.target.value;
+    setAnimal((animal) => ({ ...animal, nickname }));
   };
 
-  const handleLastnameChange = (event) => {
-    const lastname = event.target.value;
-    setStudent((student) => ({ ...student, lastname }));
+  const handleTimestampChange = (event) => {
+    const animal_record_timestamp = event.target.value;
+    setAnimal((animal) => ({ ...animal, animal_record_timestamp }));
   };
 
   //A function to handle the post request
-  const postStudent = (newStudent) => {
-    return fetch("http://localhost:8080/api/students", {
+  const postAnimal = (newAnimal) => {
+    return fetch("http://localhost:8085/api/animals", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newStudent),
+      body: JSON.stringify(newAnimal),
     })
       .then((response) => {
         return response.json();
       })
       .then((data) => {
         console.log("From the post ", data);
-        props.saveStudent(data);
+        console.log("postAnimal is working");
+        props.saveAnimal(data);
       });
   };
 
-    //A function to handle the Update request
-    const updateStudent = (existingStudent) =>{
-      return fetch(`http://localhost:8080/api/students/${existingStudent.id}`, {
-          method: 'PUT',
-          headers: {'Content-Type': 'application/json'}, 
-          body: JSON.stringify(existingStudent)
-        }).then((response) => {
-            return response.json()
-        }).then((data) => {
-          console.log("From put request ", data);
-          props.saveStudent(data);
+  //A function to handle the Update request
+  const updateAnimal = (existingAnimal) => {
+    return fetch(`http://localhost:8085/api/animals/${existingAnimal.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(existingAnimal),
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log("From put request ", data);
+        props.saveAnimal(data);
       });
-
-  }
-
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if(student.id){
-      updateStudent(student);
-    } else{
-      postStudent(student);
+    if (animal.id_animal) {
+      updateAnimal(animal);
+    } else {
+      postAnimal(animal);
     }
-    
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <fieldset>
-        <label>First Name</label>
+        <label>Animal Name</label>
         <input
           type="text"
-          id="add-user-name"
-          placeholder="First Name"
+          id="add-animal-name"
+          placeholder="Animal Name"
           required
-          value={student.firstname}
-          onChange={handleNameChange}
+          value={animal.nickname}
+          onChange={handleNicknameChange}
         />
-        <label>Last Name</label>
+        <label>Animal Record Timestamp</label>
         <input
-          type="text"
-          id="add-user-lastname"
-          placeholder="Last Name"
+          type="date"
+          id="add-record-timestamp"
+          placeholder="Timestamp"
           required
-          value={student.lastname}
-          onChange={handleLastnameChange}
+          value={animal.animal_record_timestamp}
+          onChange={handleTimestampChange}
         />
       </fieldset>
-      <button type="submit">{!student.id ? "ADD": "SAVE"}</button>
+      <button type="submit">{!animal.id_animal ? "ADD" : "SAVE"}</button>
     </form>
   );
 };
