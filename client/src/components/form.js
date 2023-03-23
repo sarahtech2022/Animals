@@ -147,16 +147,6 @@ const Form = (props) => {
           <option value={-1}> Create New Animal option</option>
         </select>
 
-        <label>Animal Record Timestamp</label>
-        <input
-          type="date"
-          id="add-record-timestamp"
-          placeholder="Timestamp"
-          required
-          value={animal.animal_record_timestamp}
-          onChange={handleTimestampChange}
-        />
-
         <label>Date of Sighting </label>
         <input
           type="date"
@@ -169,7 +159,7 @@ const Form = (props) => {
 
         <label>Time of Sighting </label>
         <input
-          type="date"
+          type="time"
           id="add-time-of-sighting"
           placeholder="Time of Sighting"
           required
