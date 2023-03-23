@@ -89,6 +89,7 @@ app.post("/api/animals", cors(), async (req, res) => {
     newAnimal.date_of_sighting,
   ]);
   const result = await db.query(
+    //How to manage post with two tables- this is probably my error
     "INSERT INTO animal(nickname, animal_record_timestamp) VALUES($1, $2) RETURNING *",
     "INSERT INTO sightings(date_of_sighting, time_of_sighting, location_of_sighting, sighter_email, health) VALUES($1, $2, $3, $4, $5) RETURNING *",
     [(newAnimal.nickname, newAnimal.animal_record_timestamp)][

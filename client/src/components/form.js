@@ -27,8 +27,8 @@ const Form = (props) => {
   };
 
   const handleSpeciesChange = (event) => {
-    const spec = event.target.value;
-    setAnimal((animal) => ({ ...animal, date_of_sighting }));
+    const species_name = event.target.value;
+    setAnimal((animal) => ({ ...animal, species_name }));
   };
 
   const handleTimestampChange = (event) => {
@@ -138,6 +138,9 @@ const Form = (props) => {
           value={animal.nickname}
           onChange={handleNicknameChange}
         >
+          {props.animals.map((animal) => {
+            return <option value={animal.nickname}>{animal.nickname} </option>;
+          })}
           {/* invalid value so wont affect the base! so put -1 */}
           <option value={-1}> Create New Animal option</option>
         </select>

@@ -57,7 +57,13 @@ function Animals() {
           if (animal.id_animal === editAnimalId) {
             //something needs to happento allow the user edit that existing student
             // At some point I need to pass the update function as props - connect this to the backend
-            return <Form initialAnimal={animal} saveAnimal={updateAnimal} />;
+            return (
+              <Form
+                initialAnimal={animal}
+                saveAnimal={updateAnimal}
+                animals={animals}
+              />
+            );
           } else {
             return (
               <li key={animal.id_animal}>
@@ -76,7 +82,7 @@ function Animals() {
           }
         })}
       </ul>
-      <Form saveAnimal={addAnimal} />
+      <Form saveAnimal={addAnimal} animals={animals} />
     </div>
   );
 }
