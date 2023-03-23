@@ -19,7 +19,7 @@ function Animals() {
   const addAnimal = (newAnimal) => {
     //console.log(newStudent);
     //postStudent(newStudent);
-    setAnimals((animal) => [...animals, newAnimal]);
+    setAnimals((animals) => [...animals, newAnimal]);
   };
 
   //A function to control the update in the parent (student component)

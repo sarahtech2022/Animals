@@ -26,6 +26,11 @@ const Form = (props) => {
     setAnimal((animal) => ({ ...animal, nickname }));
   };
 
+  const handleSpeciesChange = (event) => {
+    const spec = event.target.value;
+    setAnimal((animal) => ({ ...animal, date_of_sighting }));
+  };
+
   const handleTimestampChange = (event) => {
     const animal_record_timestamp = event.target.value;
     setAnimal((animal) => ({ ...animal, animal_record_timestamp }));
@@ -133,19 +138,31 @@ const Form = (props) => {
           value={animal.nickname}
           onChange={handleNicknameChange}
         >
-          {/* route on backend to return all species!!! an array of all ur species, use a map to return an option for each species */}
-          {/* map also takes an arrow function!! */}
-          {/* Arrow function needs to return something!! return option tag because thats what we want to show up */}
-          {species.map((element) => {
-            return (
-              <option value={element.id_species}>
-                {element.species_name}{" "}
-              </option>
-            );
-          })}
           {/* invalid value so wont affect the base! so put -1 */}
           <option value={-1}> Create New Animal option</option>
         </select>
+
+        <label>
+          Species
+          <select
+            id="species-name"
+            placeholder="Species Name"
+            required
+            value={species.species_name}
+            // onChange={handleNicknameChange}
+          >
+            {/* route on backend to return all species!!! an array of all ur species, use a map to return an option for each species */}
+            {/* map also takes an arrow function!! */}
+            {/* Arrow function needs to return something!! return option tag because thats what we want to show up */}
+            {species.map((element) => {
+              return (
+                <option value={element.id_species}>
+                  {element.species_name}{" "}
+                </option>
+              );
+            })}
+          </select>
+        </label>
 
         <label>Date of Sighting </label>
         <input
