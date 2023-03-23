@@ -70,39 +70,85 @@ app.get("/api/species", cors(), async (req, res) => {
 // });
 
 // create the POST request
-app.post("/api/animals", cors(), async (req, res) => {
-  console.log("working");
-  const newAnimal = {
-    nickname: req.body.nickname,
-    animal_record_timestamp: req.body.animal_record_timestamp,
-    species_name: req.body.species_name,
-    date_of_sighting: req.body.date_of_sighting,
-    time_of_sighting: req.body.time_of_sighting,
-    location_of_sighting: req.body.location_of_sighting,
-    sighter_email: req.body.sighter_email,
-    health: req.body.health,
-  };
-  console.log([
-    newAnimal.nickname,
-    newAnimal.animal_record_timestamp,
-    newAnimal.species_name,
-    newAnimal.date_of_sighting,
-  ]);
-  const result = await db.query(
-    //How to manage post with two tables- this is probably my error
-    "INSERT INTO animal(nickname, animal_record_timestamp) VALUES($1, $2) RETURNING *",
-    "INSERT INTO sightings(date_of_sighting, time_of_sighting, location_of_sighting, sighter_email, health) VALUES($1, $2, $3, $4, $5) RETURNING *",
-    [(newAnimal.nickname, newAnimal.animal_record_timestamp)][
-      (newAnimal.date_of_sighting,
-      newAnimal.time_of_sighting,
-      newAnimal.location_of_sighting,
-      newAnimal.sighter_email,
-      newAnimal.health)
-    ]
-  );
-  console.log(result.rows[0]);
-  res.json(result.rows[0]);
+//WILL redo this so we used Pool/Transactions ********////////////////////////////////***************
+// app.post("/api/animals", cors(), async (req, res) => {
+//   console.log("working");
+//   const newAnimal = {
+//     nickname: req.body.nickname,
+//     animal_record_timestamp: req.body.animal_record_timestamp,
+//     species_name: req.body.species_name,
+//     date_of_sighting: req.body.date_of_sighting,
+//     time_of_sighting: req.body.time_of_sighting,
+//     location_of_sighting: req.body.location_of_sighting,
+//     sighter_email: req.body.sighter_email,
+//     health: req.body.health,
+//   };
+//   console.log([
+//     newAnimal.nickname,
+//     newAnimal.animal_record_timestamp,
+//     newAnimal.species_name,
+//     newAnimal.date_of_sighting,
+//   ]);
+//   const result = await db.query(
+//     //How to manage post with two tables- this is probably my error
+//     "INSERT INTO animal(nickname, animal_record_timestamp) VALUES($1, $2) RETURNING *",
+//     "INSERT INTO sightings(date_of_sighting, time_of_sighting, location_of_sighting, sighter_email, health) VALUES($1, $2, $3, $4, $5) RETURNING *",
+//     [(newAnimal.nickname, newAnimal.animal_record_timestamp)][
+//       (newAnimal.date_of_sighting,
+//       newAnimal.time_of_sighting,
+//       newAnimal.location_of_sighting,
+//       newAnimal.sighter_email,
+//       newAnimal.health)
+//     ]
+//   );
+//   console.log(result.rows[0]);
+//   res.json(result.rows[0]);
+// });
+//****************************************** */
+
+//****************************************************************** */
+//Transaction with Dana's help!!!
+app.post("/api/animalandsighting", cors(), async (req, res) => {
+  const client = await db.connect();
+
+  try {
+    await client.query("BEGIN");
+    const insertAnimal = `
+      INSERT INTO animal(nickname)
+      VALUES($1, NOW())
+      RETURNING id_animal
+    `;
+    const newAnimal = await client.query(insertAnimal, [
+      req.body.nickname,
+      newAnimal.rows[0].id_animal,
+      // req.body.scientific_name,
+      // req.body.wild_estimate,
+      // req.body.conservation_status,
+    ]);
+
+    const insertSighting = `
+      INSERT INTO sightings(date_of_sighting, time_of_sighting, location_of_sighting, health )
+      VALUES($1, $2, $3, $4, NOW())
+      RETURNING id_sighting
+    `;
+    await client.query(insertSighting, [
+      req.body.date_of_sighting,
+      req.body.time_of_sighting,
+      req.body.location_of_sighting,
+      req.body.health,
+      newSighting.rows[0].id_sighting,
+    ]);
+    await client.query("COMMIT");
+  } catch (e) {
+    await client.query("ROLLBACK");
+    throw e;
+  } finally {
+    client.release();
+  }
+  res.status(200).send("New sighting was added successfully");
 });
+
+//********************************************************************** */
 
 //A put request - Update a student
 app.put("/api/students/:studentId", cors(), async (req, res) => {

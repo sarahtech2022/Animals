@@ -61,10 +61,10 @@ const Form = (props) => {
     setAnimal((animal) => ({ ...animal, health }));
   };
 
-  //A function to handle the post request
+  //A function to handle the post request  *** changed to animalandsighting instead of animals ??? ))))))))))))))))
   const postAnimal = (newAnimal) => {
     console.log("I am in my postrequest");
-    return fetch("http://localhost:8085/api/animals", {
+    return fetch("http://localhost:8085/api/animalandsighting", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newAnimal),
