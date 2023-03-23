@@ -14,35 +14,60 @@ app.get("/", (req, res) => {
   res.json({ message: "Hello from My template ExpressJS" });
 });
 
-// create the get request
+//** NEW Get request getting all the data in one object: */
 app.get("/api/animals", cors(), async (req, res) => {
-  // const STUDENTS = [
-
-  //     { id: 1, firstName: 'Lisa', lastName: 'Lee' },
-  //     { id: 2, firstName: 'Eileen', lastName: 'Long' },
-  //     { id: 3, firstName: 'Fariba', lastName: 'Dadko' },
-  //     { id: 4, firstName: 'Cristina', lastName: 'Rodriguez' },
-  //     { id: 5, firstName: 'Andrea', lastName: 'Trejo' },
-  // ];
-  // res.json(STUDENTS);
   try {
-    const { rows: animal } = await db.query("SELECT * FROM animal");
+    const { rows: animal } = await db.query(
+      "SELECT * FROM sightings LEFT JOIN animal ON sightings.id_animal=animal.id_animal"
+    );
     res.send(animal);
   } catch (e) {
     return res.status(400).json({ e });
   }
 });
 
-//*******Creating our New get request to get the data from the sighting table!
-
-app.get("/api/sightings", cors(), async (req, res) => {
+//***Is a DB query to get our species from the species table so we can use it in our drop down
+app.get("/api/species", cors(), async (req, res) => {
   try {
-    const { rows: sightings } = await db.query("SELECT * FROM sightings");
-    res.send(sightings);
+    const { rows: species } = await db.query(
+      //give me the rows from the result of that query
+      "SELECT * FROM species"
+    );
+    res.send(species);
   } catch (e) {
     return res.status(400).json({ e });
   }
 });
+
+// create the get request
+// app.get("/api/animals", cors(), async (req, res) => {
+//   // const STUDENTS = [
+
+//   //     { id: 1, firstName: 'Lisa', lastName: 'Lee' },
+//   //     { id: 2, firstName: 'Eileen', lastName: 'Long' },
+//   //     { id: 3, firstName: 'Fariba', lastName: 'Dadko' },
+//   //     { id: 4, firstName: 'Cristina', lastName: 'Rodriguez' },
+//   //     { id: 5, firstName: 'Andrea', lastName: 'Trejo' },
+//   // ];
+//   // res.json(STUDENTS);
+//   try {
+//     const { rows: animal } = await db.query("SELECT * FROM animal");
+//     res.send(animal);
+//   } catch (e) {
+//     return res.status(400).json({ e });
+//   }
+// });
+
+// //*******Creating our New get request to get the data from the sighting table!
+
+// app.get("/api/sightings", cors(), async (req, res) => {
+//   try {
+//     const { rows: sightings } = await db.query("SELECT * FROM sightings");
+//     res.send(sightings);
+//   } catch (e) {
+//     return res.status(400).json({ e });
+//   }
+// });
 
 // create the POST request
 app.post("/api/animals", cors(), async (req, res) => {
