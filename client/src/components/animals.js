@@ -1,0 +1,163 @@
+import { useState, useEffect } from "react";
+import Form from "./form";
+
+function Animals() {
+  // this is my original state with an array of students
+  const [animals, setAnimals] = useState([]);
+
+  // New State to contro the existing student Id that the user wants to edit
+  const [editAnimalId, setEditAnimalId] = useState(null);
+  const [species, setSpecies] = useState([]);
+  const [sightings, setSightings] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:8085/api/animals")
+      .then((response) => response.json())
+      .then((animals) => {
+        setAnimals(animals);
+      });
+  }, []);
+
+  const addAnimal = (newAnimal) => {
+    //console.log(newStudent);
+    //postStudent(newStudent);
+    setAnimals((animals) => [...animals, newAnimal]);
+  };
+
+  //A function to control the update in the parent (student component)
+
+  const updateAnimal = (savedAnimal) => {
+    console.log("Line 29 savedAnimal", savedAnimal);
+    // This function should update the whole list of students -
+    setAnimals((animals) => {
+      const newArrayAnimals = [];
+      for (let animal of animals) {
+        if (animal.id === savedAnimal.id) {
+          newArrayAnimals.push(savedAnimal);
+        } else {
+          newArrayAnimals.push(animal);
+        }
+      }
+      return newArrayAnimals;
+    });
+    // This line is only to close the form;
+    setEditAnimalId(null);
+  };
+
+  const onEdit = (animal) => {
+    console.log("This is line 26 on animal component", animal);
+    const editingID = animal.id;
+    console.log("Just the animal id", animal.id);
+    setEditAnimalId(editingID);
+  };
+
+  //do a fetch to get sightings database here! get request ((((((((((((((((((()))))))))))))))))))
+  const getSightings = () => {
+    return fetch(`http://localhost:8085/api/animalandsighting`, {
+      method: "GET",
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log("From sightings get request ", data);
+        //save variables in state!!!!
+        setSightings(data);
+      });
+  };
+
+  useEffect(() => {
+    getSightings();
+  }, []);
+
+  //******Do a fetch to get the species database here! Get request
+  //This function doesnt need parameters! Cuz it can function and run and get the data without any parameter
+  const getSpecies = () => {
+    return fetch(`http://localhost:8085/api/species`, {
+      method: "GET",
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log("From species get request ", data);
+        //save variables in state!!!!
+        setSpecies(data);
+      });
+  };
+
+  useEffect(() => {
+    getSpecies();
+  }, []); //empty depedency array will run after component mounted
+
+  return (
+    <div className="animals">
+      <h2 id="title"> Endangered Animal Sightings </h2>
+      <div>
+        <img
+          id="image"
+          src="https://us.123rf.com/450wm/blueringmedia/blueringmedia2101/blueringmedia210101098/164234466-group-of-wild-african-animal-in-the-forest-scene-illustration.jpg?ver=6"
+        ></img>
+      </div>
+
+      <ul>
+        {animals.map((animal) => {
+          if (animal.id_animal === editAnimalId) {
+            //something needs to happento allow the user edit that existing student
+            // At some point I need to pass the update function as props - connect this to the backend
+            //find does one element and filter does many!!!
+            return (
+              <Form
+                initialAnimal={animal}
+                saveAnimal={updateAnimal}
+                animals={animals}
+                key={animal.id_animal}
+                species={species}
+              />
+            );
+          } else {
+            return (
+              <li key={animal.id_animal}>
+                {animal.nickname}
+                {", "}
+                {
+                  species.find(
+                    (element) => element.id_species === animal.id_species
+                  )?.species_name
+                }
+
+                {", "}
+                {sightings
+                  .filter((element) => element.id_animal === animal.id_animal)
+                  ?.map((element) => {
+                    return (
+                      <div>
+                        {" "}
+                        {element.date_of_sighting}{" "}
+                        {element.location_of_sighting} {element.sighter_email}
+                      </div>
+                    );
+                  })}
+
+                <button
+                  key={animal.id_animal}
+                  type="button"
+                  onClick={() => {
+                    onEdit(animal);
+                  }}
+                >
+                  EDIT
+                </button>
+              </li>
+            );
+          }
+        })}
+      </ul>
+      <div id="formdiv">
+        <Form saveAnimal={addAnimal} animals={animals} species={species} />
+      </div>
+    </div>
+  );
+}
+
+export default Animals;
