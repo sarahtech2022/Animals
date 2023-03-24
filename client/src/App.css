@@ -14,7 +14,7 @@ order: 2;
   color: #9db9ac;
   font-weight: 600;
   text-transform: uppercase;
-  font-size: clamp(3rem, 10vw, 6rem);
+  font-size: clamp(2rem, 7vw, 5rem);
   line-height: 0.75em;
   text-align: center;
   text-shadow: 3px 1px 1px #3c5455, 2px 2px 1px #165bfb, 4px 2px 1px #4af7ff,
