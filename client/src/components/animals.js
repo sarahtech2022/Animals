@@ -51,7 +51,14 @@ function Animals() {
 
   return (
     <div className="animals">
-      <h2> Endangered Animal Sightings </h2>
+      <h2 id="title"> Endangered Animal Sightings </h2>
+      <div>
+        <img
+          id="image"
+          src="https://us.123rf.com/450wm/blueringmedia/blueringmedia2101/blueringmedia210101098/164234466-group-of-wild-african-animal-in-the-forest-scene-illustration.jpg?ver=6"
+        ></img>
+      </div>
+
       <ul>
         {animals.map((animal) => {
           if (animal.id_animal === editAnimalId) {
