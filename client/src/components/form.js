@@ -5,13 +5,14 @@ const Form = (props) => {
   const {
     initialAnimal = {
       id_animal: null,
+      id_species: "",
       nickname: "",
       animal_record_timestamp: "",
       date_of_sighting: "",
       time_of_sighting: "",
       location_of_sighting: "",
       sighter_email: "",
-      health: "",
+      health: false,
     },
   } = props;
 
@@ -27,13 +28,8 @@ const Form = (props) => {
   };
 
   const handleSpeciesChange = (event) => {
-    const species_name = event.target.value;
-    setAnimal((animal) => ({ ...animal, species_name }));
-  };
-
-  const handleTimestampChange = (event) => {
-    const animal_record_timestamp = event.target.value;
-    setAnimal((animal) => ({ ...animal, animal_record_timestamp }));
+    const id_species = event.target.value;
+    setAnimal((animal) => ({ ...animal, id_species }));
   };
 
   const handleDateOfSightingChange = (event) => {
@@ -57,7 +53,7 @@ const Form = (props) => {
   };
 
   const handleHealthChange = (event) => {
-    const health = event.target.value;
+    const health = event.target.checked;
     setAnimal((animal) => ({ ...animal, health }));
   };
 
@@ -138,8 +134,16 @@ const Form = (props) => {
           value={animal.nickname}
           onChange={handleNicknameChange}
         >
+          <option value="" disabled>
+            {" "}
+            Choose Animal
+          </option>
           {props.animals.map((animal) => {
-            return <option value={animal.nickname}>{animal.nickname} </option>;
+            return (
+              <option key={animal.id_animal} value={animal.nickname}>
+                {animal.nickname}
+              </option>
+            );
           })}
           {/* invalid value so wont affect the base! so put -1 */}
           <option value={-1}> Create New Animal option</option>
@@ -151,15 +155,20 @@ const Form = (props) => {
             id="species-name"
             placeholder="Species Name"
             required
-            value={species.species_name}
+            value={animal.id_species}
             // onChange={handleNicknameChange}
+
+            onChange={handleSpeciesChange}
           >
+            <option value="" disabled>
+              Choose Species
+            </option>
             {/* route on backend to return all species!!! an array of all ur species, use a map to return an option for each species */}
             {/* map also takes an arrow function!! */}
             {/* Arrow function needs to return something!! return option tag because thats what we want to show up */}
             {species.map((element) => {
               return (
-                <option value={element.id_species}>
+                <option id={element.id_species} value={element.id_species}>
                   {element.species_name}{" "}
                 </option>
               );
@@ -197,9 +206,19 @@ const Form = (props) => {
           onChange={handleLocationOfSightingChange}
         />
 
-        <label>Health </label>
+        <label>Email of Sighter </label>
         <input
           type="text"
+          id="add-email-of-sighter"
+          placeholder="Email of Sighter"
+          required
+          value={animal.sighter_email}
+          onChange={handleSighterEmailChange}
+        />
+
+        <label>Health </label>
+        <input
+          type="checkbox"
           id="add-health"
           placeholder="Health"
           required

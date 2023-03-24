@@ -62,6 +62,7 @@ function Animals() {
                 initialAnimal={animal}
                 saveAnimal={updateAnimal}
                 animals={animals}
+                key={animal.id_animal}
               />
             );
           } else {

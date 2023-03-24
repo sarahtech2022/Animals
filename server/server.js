@@ -112,40 +112,41 @@ app.post("/api/animalandsighting", cors(), async (req, res) => {
   const client = await db.connect();
 
   try {
+    //Automatically generating the id_animal coloumn and the animal record timestamp so not needed!
     await client.query("BEGIN");
-    const insertAnimal = `
-      INSERT INTO animal(nickname)
-      VALUES($1, NOW())
+    const insertAnimal = ` 
+      INSERT INTO animal(nickname, id_species)
+      VALUES($1, $2)
       RETURNING id_animal
     `;
     const newAnimal = await client.query(insertAnimal, [
+      // can use newAnimal because thats whats returning id_animal
       req.body.nickname,
-      newAnimal.rows[0].id_animal,
-      // req.body.scientific_name,
-      // req.body.wild_estimate,
-      // req.body.conservation_status,
+      req.body.id_species,
+      // newAnimal.rows[0].id_animal, (Not needed here, because anything that is in that arrray should coorspond to the query)
     ]);
 
     const insertSighting = `
-      INSERT INTO sightings(date_of_sighting, time_of_sighting, location_of_sighting, health )
-      VALUES($1, $2, $3, $4, NOW())
+      INSERT INTO sightings(date_of_sighting, id_animal, time_of_sighting, location_of_sighting, health, sighter_email)
+      VALUES($1, $2, $3, $4, $5, $6)
       RETURNING id_sighting
     `;
     await client.query(insertSighting, [
       req.body.date_of_sighting,
+      newAnimal.rows[0].id_animal,
       req.body.time_of_sighting,
       req.body.location_of_sighting,
       req.body.health,
-      newSighting.rows[0].id_sighting,
+      req.body.sighter_email,
     ]);
     await client.query("COMMIT");
   } catch (e) {
     await client.query("ROLLBACK");
-    throw e;
+    console.log(e.message);
   } finally {
     client.release();
   }
-  res.status(200).send("New sighting was added successfully");
+  res.status(200).json({ message: "New sighting was added successfully" });
 });
 
 //********************************************************************** */
