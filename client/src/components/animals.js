@@ -51,7 +51,7 @@ function Animals() {
 
   return (
     <div className="animals">
-      <h2> List of Animals </h2>
+      <h2> Endangered Animal Sightings </h2>
       <ul>
         {animals.map((animal) => {
           if (animal.id_animal === editAnimalId) {
