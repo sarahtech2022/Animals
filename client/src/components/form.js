@@ -2,23 +2,21 @@ import { useState } from "react";
 import { useEffect } from "react";
 
 const Form = (props) => {
-  const {
-    initialAnimal = {
-      id_animal: null,
-      id_species: "",
-      nickname: "",
-      animal_record_timestamp: "",
-      date_of_sighting: "",
-      time_of_sighting: "",
-      location_of_sighting: "",
-      sighter_email: "",
-      health: false,
-    },
-  } = props;
+  const initialAnimal = {
+    id_animal: null,
+    id_species: "",
+    nickname: "",
+    animal_record_timestamp: "",
+    date_of_sighting: "",
+    time_of_sighting: "",
+    location_of_sighting: "",
+    sighter_email: "",
+    health: false,
+  };
 
   // This is the oroginal State with not initial student
   const [animal, setAnimal] = useState(initialAnimal);
-  const [species, setSpecies] = useState([]);
+
   //UseEffect is a way to run asynchronous function but put it at bottom
 
   //create functions that handle the event of the user typing into the form
@@ -100,26 +98,6 @@ const Form = (props) => {
     }
   };
 
-  //******Do a fetch to get the species database here! Get request
-  //This function doesnt need parameters! Cuz it can function and run and get the data without any parameter
-  const getSpecies = () => {
-    return fetch(`http://localhost:8085/api/species`, {
-      method: "GET",
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        console.log("From species get request ", data);
-        //save variables in state!!!!
-        setSpecies(data);
-      });
-  };
-
-  useEffect(() => {
-    getSpecies();
-  }, []); //empty depedency array will run after component mounted
-
   //Put Use effect after function is declared
   //fetch is asychrounous operation, can do asychn in the main body of the component- the whole function!
 
@@ -166,7 +144,7 @@ const Form = (props) => {
             {/* route on backend to return all species!!! an array of all ur species, use a map to return an option for each species */}
             {/* map also takes an arrow function!! */}
             {/* Arrow function needs to return something!! return option tag because thats what we want to show up */}
-            {species.map((element) => {
+            {props.species.map((element) => {
               return (
                 <option id={element.id_species} value={element.id_species}>
                   {element.species_name}{" "}

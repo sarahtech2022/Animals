@@ -151,6 +151,20 @@ app.post("/api/animalandsighting", cors(), async (req, res) => {
 
 //********************************************************************** */
 
+//Get Request for sightings: ===============
+
+app.get("/api/animalandsighting", cors(), async (req, res) => {
+  try {
+    const { rows: sightings } = await db.query(
+      //give me the rows from the result of that query
+      "SELECT * FROM sightings"
+    );
+    res.json(sightings); //res.send will have plain text or html, res.json makes it an object
+  } catch (e) {
+    return res.status(400).json({ e });
+  }
+});
+
 //A put request - Update a student
 app.put("/api/students/:studentId", cors(), async (req, res) => {
   console.log(req.params);

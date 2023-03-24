@@ -7,6 +7,8 @@ function Animals() {
 
   // New State to contro the existing student Id that the user wants to edit
   const [editAnimalId, setEditAnimalId] = useState(null);
+  const [species, setSpecies] = useState([]);
+  const [sightings, setSightings] = useState([]);
 
   useEffect(() => {
     fetch("http://localhost:8085/api/animals")
@@ -49,6 +51,45 @@ function Animals() {
     setEditAnimalId(editingID);
   };
 
+  //do a fetch to get sightings database here! get request ((((((((((((((((((()))))))))))))))))))
+  const getSightings = () => {
+    return fetch(`http://localhost:8085/api/animalandsighting`, {
+      method: "GET",
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log("From sightings get request ", data);
+        //save variables in state!!!!
+        setSightings(data);
+      });
+  };
+
+  useEffect(() => {
+    getSightings();
+  }, []);
+
+  //******Do a fetch to get the species database here! Get request
+  //This function doesnt need parameters! Cuz it can function and run and get the data without any parameter
+  const getSpecies = () => {
+    return fetch(`http://localhost:8085/api/species`, {
+      method: "GET",
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log("From species get request ", data);
+        //save variables in state!!!!
+        setSpecies(data);
+      });
+  };
+
+  useEffect(() => {
+    getSpecies();
+  }, []); //empty depedency array will run after component mounted
+
   return (
     <div className="animals">
       <h2 id="title"> Endangered Animal Sightings </h2>
@@ -64,18 +105,40 @@ function Animals() {
           if (animal.id_animal === editAnimalId) {
             //something needs to happento allow the user edit that existing student
             // At some point I need to pass the update function as props - connect this to the backend
+            //find does one element and filter does many!!!
             return (
               <Form
                 initialAnimal={animal}
                 saveAnimal={updateAnimal}
                 animals={animals}
                 key={animal.id_animal}
+                species={species}
               />
             );
           } else {
             return (
               <li key={animal.id_animal}>
-                {animal.nickname}{" "}
+                {animal.nickname}
+                {", "}
+                {
+                  species.find(
+                    (element) => element.id_species === animal.id_species
+                  )?.species_name
+                }
+
+                {", "}
+                {sightings
+                  .filter((element) => element.id_animal === animal.id_animal)
+                  ?.map((element) => {
+                    return (
+                      <div>
+                        {" "}
+                        {element.date_of_sighting}{" "}
+                        {element.location_of_sighting} {element.sighter_email}
+                      </div>
+                    );
+                  })}
+
                 <button
                   key={animal.id_animal}
                   type="button"
@@ -91,7 +154,7 @@ function Animals() {
         })}
       </ul>
       <div id="formdiv">
-        <Form saveAnimal={addAnimal} animals={animals} />
+        <Form saveAnimal={addAnimal} animals={animals} species={species} />
       </div>
     </div>
   );
