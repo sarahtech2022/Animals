@@ -90,7 +90,9 @@ function Animals() {
           }
         })}
       </ul>
-      <Form saveAnimal={addAnimal} animals={animals} />
+      <div id="formdiv">
+        <Form saveAnimal={addAnimal} animals={animals} />
+      </div>
     </div>
   );
 }

@@ -34,6 +34,13 @@ order: 2;
      
 }
 
+#formdiv{
+  margin: auto;
+    width: 50%;
+    /* border: 3px solid rgb(152, 200, 152); */
+    padding: 10px;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -46,7 +53,7 @@ order: 2;
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #a8b1c2;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
